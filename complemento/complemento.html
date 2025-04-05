@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complemento Binário</title>
+  <link rel="stylesheet" href="complemento.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1>Complemento Binário</h1>
+
+    <div class="input-group">
+      <div class="checkbox-container">
+        <input type="checkbox" id="padTo8Bits" class="custom-checkbox">
+        <label for="padTo8Bits" class="checkbox-label">Completar para 8 bits</label>
+      </div>
+      <input type="text" class="input-number" id="binaryInput" placeholder="Número binário" autocomplete="off">
+    </div>
+
+    <div class="result-container">
+      <input type="text" id="result" placeholder="Resultado" readonly>
+      <button id="clear-btn" class="clear-btn">×</button>
+    </div>
+
+    <div class="operations">
+      <button class="operation-btn" data-operation="complemento1">Complemento de 1</button>
+      <button class="operation-btn" data-operation="complemento2">Complemento de 2</button>
+    </div>
+
+    <div class="action-buttons">
+      <button class="calculate-btn" id="calculate">Calcular</button>
+      <a href="https://rafaelpg1.github.io/ARQUITETURA/" class="back-btn">VOLTAR</a>
+    </div>
+
+    <p class="warning">Atenção: Insira apenas números binários (0 e 1)</p>
+  </div>
+
+  <script src="complemento.js"></script>
+</body>
+
+</html>
