@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  let numeroDecimal = null
+  let numeroSorteado = null
   let respostaCorreta = ""
 
   const maxNumberInput = document.getElementById("max-number")
@@ -10,87 +10,51 @@ document.addEventListener("DOMContentLoaded", function () {
   const labelCalculo = document.createElement("div")
   const labelObs = document.createElement("div")
 
-  // Configuração dos elementos de exibição
   labelResposta.innerText = "Resposta:"
   labelResposta.style.fontWeight = "bold"
   labelResposta.style.marginTop = "10px"
-  labelResposta.style.color = "red"
+  labelResposta.style.color = "red" // Adicionando cor vermelha para "Resposta:"
+
   labelCalculo.style.fontWeight = "bold"
   labelCalculo.style.marginTop = "10px"
-  labelCalculo.style.lineHeight = "1.8"
-  labelCalculo.style.whiteSpace = "pre-line"
+  labelCalculo.style.lineHeight = "1.8" // Ajuste o valor conforme necessário
+
   labelObs.style.fontWeight = "bold"
   labelObs.style.marginTop = "10px"
+  labelCalculo.style.whiteSpace = "pre-line"
 
   document.body.appendChild(labelResposta)
   document.body.appendChild(labelCalculo)
   document.body.appendChild(labelObs)
 
-  // Função para validar número decimal
-  function isValidDecimal(decStr) {
-    return /^\d+$/.test(decStr)
+function sortearNumero() {
+  const maxNumber = parseInt(maxNumberInput.value, 10) || 100
+  numeroDecimal = Math.floor(Math.random() * maxNumber) + 1
+  resultInput.value = numeroDecimal
+  inputNumber.value = ""
+  labelResposta.textContent = "Resposta:"
+  labelCalculo.textContent = ""
+  labelObs.textContent = ""
+}
+
+function calcularBinario(numero) {
+  if (numero === 0) return "0 ÷ 2 = 0 → resto = 0"
+
+  let passos = []
+  let restos = []
+  let num = numero
+
+  while (num > 0) {
+    const quociente = Math.floor(num / 2)
+    const resto = num % 2
+    passos.push(`${num} ÷ 2 = ${quociente} → resto = ${resto}`)
+    restos.unshift(resto)
+    num = quociente
   }
 
-  // Função para sortear número (original mantida)
-  function sortearNumero() {
-    let checkedOption = obterOpcaoSelecionada()
-    const maxNumber = parseInt(maxNumberInput.value, 10) || 100
-    numeroDecimal = Math.floor(Math.random() * maxNumber) + 1
-    resultInput.value = numeroDecimal
-    inputNumber.value = ""
-    labelResposta.textContent = "Resposta:"
-    labelCalculo.textContent = ""
-    labelObs.textContent = ""
-
-    if (
-      checkedOption &&
-      checkedOption.nextSibling.textContent.includes("Decimal para binário")
-    ) {
-      respostaCorreta = numeroDecimal.toString(2)
-    } else if (
-      checkedOption &&
-      checkedOption.nextSibling.textContent.includes("Decimal para Hexadecimal")
-    ) {
-      respostaCorreta = numeroDecimal.toString(16).toUpperCase()
-    } else if (
-      checkedOption &&
-      checkedOption.nextSibling.textContent.includes("Decimal para Octal")
-    ) {
-      respostaCorreta = numeroDecimal.toString(8)
-    }
-  }
-
-  // Função para obter o número decimal (digitado ou sorteado)
-  function getDecimalNumber() {
-    const digitado = resultInput.value.trim()
-
-    if (digitado && !isValidDecimal(digitado)) {
-      alert(
-        "Por favor, digite um número decimal válido (apenas dígitos de 0-9)"
-      )
-      return null
-    }
-
-    return digitado ? parseInt(digitado, 10) : numeroDecimal
-  }
-
-  // Funções de cálculo originais mantidas
-  function calcularBinario(numero) {
-    let passos = ["Decimal para Binário:"]
-    while (numero >= 2) {
-      let quociente = Math.floor(numero / 2)
-      let resto = numero % 2
-      passos.push(`${numero} ÷ 2 = ${quociente} → resto = ${resto}`)
-      numero = quociente
-    }
-    passos.push(`Último quociente (${numero}) → Primeiro dígito`)
-    passos.push(
-      `<span style="color: red;">Lemos:</span> <span style="color: white;">${numeroDecimal.toString(
-        2
-      )}<span style="font-size: 60%; vertical-align: bottom;">2</span></span>`
-    )
-    return passos.join("\n")
-  }
+  passos.push(`<span style="color:red">Resultado:</span> ${restos.join("")}`)
+  return passos.join("<br>")
+}
 
   function calcularHexadecimal(numero) {
     let passos = []
@@ -139,6 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let restoArray = []
     let quociente = numero
 
+    // Calcula os quocientes e restos e armazena-os
     while (quociente >= 8) {
       let novoQuociente = Math.floor(quociente / 8)
       let resto = quociente % 8
@@ -151,10 +116,13 @@ document.addEventListener("DOMContentLoaded", function () {
       quociente = novoQuociente
     }
 
+    // Adiciona o último quociente
     restoArray.push(quociente)
+
+    // Observa a ordem e converte para octal
     passos.push(`Último quociente (${quociente}) → primeiro dígito`)
     passos.push(
-      "Observamos que a ordem que vai ficar começa por baixo (o último quociente) e vai até o resto (subindo)."
+      `Observamos que a ordem que vai ficar começa por baixo (o último quociente) e vai até o resto (subindo).`
     )
     let resultadoOctal = restoArray.reverse().join("")
     passos.push(
@@ -163,58 +131,46 @@ document.addEventListener("DOMContentLoaded", function () {
     return passos.join("\n")
   }
 
-  // Função confirmarNumero atualizada
-  function confirmarNumero() {
-    const decimalParaCalcular = getDecimalNumber()
+  // Exemplos de uso:
+  console.log(calcularOctal(60))
+  console.log(calcularOctal(98))
 
-    if (!decimalParaCalcular) {
-      alert("Primeiro, digite um número decimal ou clique em SORTEAR!")
-      return
-    }
+function confirmarNumero() {
+  // Obtém o número digitado ou sorteado
+  const numeroDigitado = resultInput.value.trim()
 
-    let checkedOption = obterOpcaoSelecionada()
-    if (!checkedOption) {
-      alert("Selecione um tipo de conversão!")
-      return
-    }
+  // Verifica se há número digitado
+  if (!numeroDigitado) {
+    alert("Por favor, digite um número decimal ou clique em SORTEAR!")
+    return
+  }
 
-    let respostaUsuario = inputNumber.value.trim().toUpperCase()
-    let respostaEsperada = ""
-    let calculo = ""
+  // Verifica se é um número decimal válido
+  if (!/^\d+$/.test(numeroDigitado)) {
+    alert("Por favor, digite apenas dígitos de 0-9!")
+    return
+  }
 
-    if (
-      checkedOption.nextSibling.textContent.includes("Decimal para binário")
-    ) {
-      respostaCorreta = decimalParaCalcular.toString(2)
-      respostaEsperada = respostaCorreta
-      calculo = calcularBinario(decimalParaCalcular).replace(/\n/g, "<br>")
-    } else if (
-      checkedOption.nextSibling.textContent.includes("Decimal para Hexadecimal")
-    ) {
-      respostaCorreta = decimalParaCalcular.toString(16).toUpperCase()
-      respostaEsperada = "0x" + respostaCorreta
-      calculo = calcularHexadecimal(decimalParaCalcular).replace(/\n/g, "<br>")
-    } else if (
-      checkedOption.nextSibling.textContent.includes("Decimal para Octal")
-    ) {
-      respostaCorreta = decimalParaCalcular.toString(8)
-      respostaEsperada = respostaCorreta
-      calculo = calcularOctal(decimalParaCalcular).replace(/\n/g, "<br>")
-    }
+  const decimal = parseInt(numeroDigitado, 10)
+  const checkedOption = obterOpcaoSelecionada()
 
-    let respostaParaComparar = respostaUsuario
-    if (checkedOption.nextSibling.textContent.includes("Hexadecimal")) {
-      respostaParaComparar = respostaUsuario.replace(/^0X/, "")
-    }
+  // Verifica se uma opção foi selecionada
+  if (!checkedOption) {
+    alert("Por favor, selecione um tipo de conversão!")
+    return
+  }
 
-    let respostaCorretaUsuario = false
-    if (checkedOption.nextSibling.textContent.includes("Hexadecimal")) {
-      respostaCorretaUsuario = respostaParaComparar === respostaCorreta
-    } else {
-      respostaCorretaUsuario = respostaParaComparar === respostaCorreta
-    }
+  const respostaUsuario = inputNumber.value.trim()
+  let respostaEsperada = ""
+  let calculo = ""
 
-    if (respostaCorretaUsuario) {
+  // Conversão para Binário
+  if (checkedOption.value === "binario") {
+    respostaEsperada = decimal.toString(2)
+    calculo = calcularBinario(decimal)
+
+    // Verificação da resposta
+    if (respostaUsuario === respostaEsperada) {
       inputNumber.style.backgroundColor = "green"
     } else {
       inputNumber.style.backgroundColor = "red"
@@ -222,36 +178,77 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     labelResposta.innerHTML = `Resposta: ${respostaEsperada}`
-    labelCalculo.innerHTML = `<span style="color: rgb(0, 255, 255);">CÁLCULO:</span><br>${calculo}`
-
-    if (
-      checkedOption.nextSibling.textContent.includes("Decimal para binário")
-    ) {
-      labelObs.textContent = "OBS: A ordem que vai ficar começa por baixo"
-    } else {
-      labelObs.textContent = ""
-    }
+    labelCalculo.innerHTML = `<span style="color: rgb(0, 255, 255); font-weight: bold;">CÁLCULO:</span><br>${calculo}`
+    labelObs.textContent = "OBS: Ler os restos de baixo para cima"
   }
+  // Conversão para Hexadecimal
+  else if (checkedOption.value === "hexadecimal") {
+    respostaEsperada = "0x" + decimal.toString(16).toUpperCase()
+    calculo = calcularHexadecimal(decimal)
+
+    // Remove o prefixo 0x para comparação
+    const respostaParaComparar = respostaUsuario.replace(/^0x/i, "")
+    const respostaCorreta = decimal.toString(16).toUpperCase()
+
+    if (respostaParaComparar === respostaCorreta) {
+      inputNumber.style.backgroundColor = "green"
+    } else {
+      inputNumber.style.backgroundColor = "red"
+      setTimeout(() => (inputNumber.style.backgroundColor = ""), 3000)
+    }
+
+    labelResposta.innerHTML = `Resposta: ${respostaEsperada}`
+    labelCalculo.innerHTML = `<span style="color: rgb(0, 255, 255); font-weight: bold;">CÁLCULO:</span><br>${calculo}`
+    labelObs.textContent = ""
+  }
+  // Conversão para Octal
+  else if (checkedOption.value === "octal") {
+    respostaEsperada = decimal.toString(8)
+    calculo = calcularOctal(decimal)
+
+    if (respostaUsuario === respostaEsperada) {
+      inputNumber.style.backgroundColor = "green"
+    } else {
+      inputNumber.style.backgroundColor = "red"
+      setTimeout(() => (inputNumber.style.backgroundColor = ""), 3000)
+    }
+
+    labelResposta.innerHTML = `Resposta: ${respostaEsperada}`
+    labelCalculo.innerHTML = `<span style="color: rgb(0, 255, 255); font-weight: bold;">CÁLCULO:</span><br>${calculo}`
+    labelObs.textContent = ""
+  }
+
+  // Limpa o campo de entrada após 3 segundos (apenas para respostas erradas)
+  if (inputNumber.style.backgroundColor === "red") {
+    setTimeout(() => {
+      inputNumber.value = ""
+    }, 3000)
+  }
+}
 
   function obterOpcaoSelecionada() {
     return Array.from(checkboxes).find((chk) => chk.checked)
   }
-
   function Apagartudo() {
+    // Limpa as entradas e saídas
     inputNumber.value = ""
     inputNumber.style.backgroundColor = ""
     resultInput.value = ""
-    numeroDecimal = null
+
+    // Limpa os labels de cálculo e resposta
     labelResposta.innerHTML = "Resposta:"
     labelCalculo.innerHTML = ""
     labelObs.textContent = ""
+
+    // Desmarca todas as checkboxes
     checkboxes.forEach((checkbox) => {
       checkbox.checked = false
     })
+
+    console.log("Tudo foi apagado!")
   }
 
-  // Mantendo todas as funções originais disponíveis globalmente
   window.sortearNumero = sortearNumero
   window.confirmarNumero = confirmarNumero
-  window.Apagartudo = Apagartudo
+  window.Apagartudo = Apagartudo // Expõe a função para o escopo global
 })
