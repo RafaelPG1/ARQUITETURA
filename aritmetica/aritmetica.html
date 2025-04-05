@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aritmética Binária</title>
+  <link rel="stylesheet" href="aritmetica.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1>Aritmética Binária</h1>
+
+    <div class="input-group">
+      <input type="text" class="input-number" id="binary1" placeholder="Número binário 1" autocomplete="off">
+      <input type="text" class="input-number" id="binary2" placeholder="Número binário 2" autocomplete="off">
+    </div>
+
+    <div class="result-container">
+      <label for="result">Resultado:</label>
+      <div class="result-wrapper">
+        <input type="text" id="result" readonly autocomplete="off">
+        <button id="clear-result" class="clear-btn">×</button>
+      </div>
+    </div>
+
+    <div class="operations">
+      <button class="operation-btn" data-operation="add">Adição (+)</button>
+      <button class="operation-btn" data-operation="sub">Subtração (-)</button>
+      <button class="operation-btn" data-operation="mul">Multiplicação (×)</button>
+      <button class="operation-btn" data-operation="div">Divisão (÷)</button>
+    </div>
+
+    <div class="action-buttons">
+      <button class="calculate-btn" id="calculate">Calcular</button>
+      <a href="https://rafaelpg1.github.io/ARQUITETURA/" class="back-btn">VOLTAR</a>
+    </div>
+
+    <p class="warning">Atenção: Insira apenas números binários (0 e 1)</p>
+  </div>
+
+  <script src="aritmetica.js"></script>
+</body>
+
+</html>
