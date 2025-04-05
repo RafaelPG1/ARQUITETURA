@@ -136,51 +136,48 @@ function calcularBinario(numero) {
   console.log(calcularOctal(98))
 
 function confirmarNumero() {
-  // Obtém o número digitado ou sorteado
-  const numeroDigitado = resultInput.value.trim()
-
   // Verifica se há número digitado
+  const numeroDigitado = resultInput.value.trim()
   if (!numeroDigitado) {
-    alert("Por favor, digite um número decimal ou clique em SORTEAR!")
+    alert("Digite um número ou clique em Sortear!")
     return
   }
 
-  // Verifica se é um número decimal válido
+  // Verifica se é número válido
   if (!/^\d+$/.test(numeroDigitado)) {
-    alert("Por favor, digite apenas dígitos de 0-9!")
+    alert("Digite apenas números decimais (0-9)!")
     return
   }
 
   const decimal = parseInt(numeroDigitado, 10)
   const checkedOption = obterOpcaoSelecionada()
 
-  // Verifica se uma opção foi selecionada
   if (!checkedOption) {
-    alert("Por favor, selecione um tipo de conversão!")
+    alert("Selecione um tipo de conversão!")
     return
   }
 
   const respostaUsuario = inputNumber.value.trim()
-  let respostaEsperada = ""
+  let respostaCorreta = ""
   let calculo = ""
 
-  // Conversão para Binário
   if (checkedOption.value === "binario") {
-    respostaEsperada = decimal.toString(2)
+    respostaCorreta = decimal.toString(2)
     calculo = calcularBinario(decimal)
 
     // Verificação da resposta
-    if (respostaUsuario === respostaEsperada) {
+    if (respostaUsuario === respostaCorreta) {
       inputNumber.style.backgroundColor = "green"
     } else {
       inputNumber.style.backgroundColor = "red"
       setTimeout(() => (inputNumber.style.backgroundColor = ""), 3000)
     }
 
-    labelResposta.innerHTML = `Resposta: ${respostaEsperada}`
-    labelCalculo.innerHTML = `<span style="color: rgb(0, 255, 255); font-weight: bold;">CÁLCULO:</span><br>${calculo}`
+    labelResposta.innerHTML = `Resposta: ${respostaCorreta}`
+    labelCalculo.innerHTML = `<span style="color: cyan; font-weight: bold;">CÁLCULO:</span><br>${calculo}`
     labelObs.textContent = "OBS: Ler os restos de baixo para cima"
   }
+
   // Conversão para Hexadecimal
   else if (checkedOption.value === "hexadecimal") {
     respostaEsperada = "0x" + decimal.toString(16).toUpperCase()
