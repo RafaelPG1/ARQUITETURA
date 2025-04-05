@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
     selectedOperation = null
   })
 
-  // Funções de operação binária (mantidas as mesmas)
+  // Funções de operação binária
   const binaryOperations = {
     add: (a, b) => {
       let result = ""
@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
     },
   }
 
-  // Funções auxiliares (mantidas as mesmas)
+  // Funções auxiliares
   function binaryCompare(a, b) {
     a = a.replace(/^0+/, "") || "0"
     b = b.replace(/^0+/, "") || "0"
@@ -146,7 +146,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return /^[01]+$/.test(bin)
   }
 
-  // Calcular (mantido o mesmo)
+  // Calcular
   calculateBtn.addEventListener("click", () => {
     if (!selectedOperation) {
       result.value = "Selecione uma operação"
@@ -174,7 +174,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   })
 
-  // Validação em tempo real (mantida a mesma)
+  // Validação em tempo real
   ;[binary1, binary2].forEach((input) => {
     input.addEventListener("input", function () {
       if (!isValidBinary(this.value.trim())) {
@@ -183,5 +183,26 @@ document.addEventListener("DOMContentLoaded", function () {
         this.style.borderColor = "#444"
       }
     })
+  })
+
+  // Event listener para tecla Enter - Versão corrigida
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Enter" || event.keyCode === 13) {
+      event.preventDefault() // Evita comportamento padrão
+
+      // Foca no próximo campo se ainda não tiver operação selecionada
+      if (!selectedOperation) {
+        if (event.target === binary1) {
+          binary2.focus()
+        } else if (event.target === binary2) {
+          // Se estiver no binary2 sem operação, mostra mensagem
+          result.value = "Selecione uma operação"
+        }
+        return
+      }
+
+      // Se tiver operação selecionada, calcula
+      calculateBtn.click()
+    }
   })
 })
