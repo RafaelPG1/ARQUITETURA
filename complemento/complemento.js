@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+  const decimalInput = document.getElementById("decimalInput")
   const binaryInput = document.getElementById("binaryInput")
   const result = document.getElementById("result")
   const calculateBtn = document.getElementById("calculate")
@@ -28,6 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Limpar campos
   clearBtn.addEventListener("click", () => {
+    decimalInput.value = ""
     binaryInput.value = ""
     result.value = ""
     operationButtons.forEach((btn) => {
@@ -75,6 +77,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
       return result
     },
+
+    sinalMagnitude: (binary) => {
+      if (!/^[01]+$/.test(binary)) {
+        throw new Error("Entrada inválida")
+      }
+      // Transforma o primeiro bit em 0 (positivo) ou 1 (negativo)
+      if (binary.length === 0) return binary
+      const magnitude = binary.substring(1)
+      return (binary[0] === "0" ? "1" : "0") + magnitude
+    },
+  }
+
+  // Converter decimal para binário
+  function decimalToBinary(decimal) {
+    const num = parseInt(decimal)
+    if (isNaN(num)) {
+      throw new Error("Digite um número decimal válido")
+    }
+    return Math.abs(num).toString(2)
   }
 
   // Completar com zeros se necessário
@@ -93,8 +114,15 @@ document.addEventListener("DOMContentLoaded", function () {
   // Função principal de cálculo
   function calculate() {
     try {
-      result.style.color = "#4CAF50"
+      result.style.color = "white"
       binaryInput.style.borderColor = "#444"
+      decimalInput.style.borderColor = "#444"
+
+      // Se houver valor no decimalInput, converte para binário
+      if (decimalInput.value.trim()) {
+        const binary = decimalToBinary(decimalInput.value.trim())
+        binaryInput.value = maybePadBits(binary)
+      }
 
       if (!selectedOperation) {
         throw new Error("Selecione uma operação")
@@ -118,7 +146,11 @@ document.addEventListener("DOMContentLoaded", function () {
     } catch (error) {
       result.value = error.message
       result.style.color = "#ff5555"
-      binaryInput.style.borderColor = "#ff5555"
+      if (error.message.includes("decimal")) {
+        decimalInput.style.borderColor = "#ff5555"
+      } else {
+        binaryInput.style.borderColor = "#ff5555"
+      }
     }
   }
 
@@ -138,5 +170,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   })
 
+  decimalInput.addEventListener("input", function () {
+    if (this.value.trim() === "" || !isNaN(this.value.trim())) {
+      this.style.borderColor = "#444"
+    } else {
+      this.style.borderColor = "#ff5555"
+    }
+  })
+
   binaryInput.focus()
 })
+
