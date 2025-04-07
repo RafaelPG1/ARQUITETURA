@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // Elementos do DOM
   const decimalInput = document.getElementById("decimalInput")
   const binaryInput = document.getElementById("binaryInput")
   const result = document.getElementById("result")
@@ -6,7 +7,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const clearBtn = document.getElementById("clear-btn")
   const operationButtons = document.querySelectorAll(".operation-btn")
   const padCheckbox = document.getElementById("padTo8Bits")
+  const signOptions = document.getElementById("signOptions")
 
+  // Estado da aplicação
   let selectedOperation = null
 
   // Selecionar operação
@@ -18,11 +21,18 @@ document.addEventListener("DOMContentLoaded", function () {
       })
 
       if (selectedOperation === button.dataset.operation) {
+        // Deseleciona se clicar novamente
         selectedOperation = null
+        signOptions.style.display = "none"
       } else {
+        // Seleciona nova operação
         button.classList.add("active")
         button.style.backgroundColor = "#4CAF50"
         selectedOperation = button.dataset.operation
+
+        // Mostra/oculta opções de sinal conforme a operação
+        signOptions.style.display =
+          selectedOperation === "sinalMagnitude" ? "flex" : "none"
       }
     })
   })
@@ -37,10 +47,11 @@ document.addEventListener("DOMContentLoaded", function () {
       btn.style.backgroundColor = "#333"
     })
     selectedOperation = null
+    signOptions.style.display = "none"
     binaryInput.focus()
   })
 
-  // Funções de complemento
+  // Operações de complemento
   const complementOperations = {
     complemento1: (binary) => {
       if (!/^[01]+$/.test(binary)) {
@@ -82,10 +93,19 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!/^[01]+$/.test(binary)) {
         throw new Error("Entrada inválida")
       }
-      // Transforma o primeiro bit em 0 (positivo) ou 1 (negativo)
-      if (binary.length === 0) return binary
-      const magnitude = binary.substring(1)
-      return (binary[0] === "0" ? "1" : "0") + magnitude
+
+      // Verifica qual opção de sinal está selecionada
+      const isNegative = document.getElementById("negativeSign").checked
+
+      // Determina o bit de sinal
+      const signBit = isNegative ? "1" : "0"
+
+      // Se o número já tiver um bit de sinal (primeiro bit), substitui
+      if (binary.length > 0) {
+        return signBit + binary.substring(1)
+      }
+
+      return signBit
     },
   }
 
@@ -114,16 +134,18 @@ document.addEventListener("DOMContentLoaded", function () {
   // Função principal de cálculo
   function calculate() {
     try {
-      result.style.color = "white"
+      // Reset de estilos
+      result.style.color = "#4caf50"
       binaryInput.style.borderColor = "#444"
       decimalInput.style.borderColor = "#444"
 
-      // Se houver valor no decimalInput, converte para binário
+      // Converter decimal para binário se houver entrada
       if (decimalInput.value.trim()) {
         const binary = decimalToBinary(decimalInput.value.trim())
         binaryInput.value = maybePadBits(binary)
       }
 
+      // Validações
       if (!selectedOperation) {
         throw new Error("Selecione uma operação")
       }
@@ -138,12 +160,15 @@ document.addEventListener("DOMContentLoaded", function () {
         throw new Error("Use apenas 0 e 1")
       }
 
+      // Aplica padding se necessário
       const paddedNum = maybePadBits(num)
       binaryInput.value = paddedNum
 
+      // Executa a operação selecionada
       const operationResult = complementOperations[selectedOperation](paddedNum)
       result.value = maybePadBits(operationResult)
     } catch (error) {
+      // Tratamento de erros
       result.value = error.message
       result.style.color = "#ff5555"
       if (error.message.includes("decimal")) {
@@ -154,8 +179,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Event listeners
+  // Event Listeners
   calculateBtn.addEventListener("click", calculate)
+
   document.addEventListener("keydown", function (e) {
     if (e.key === "Enter") {
       calculate()
@@ -178,6 +204,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   })
 
+  // Foco inicial no campo binário
   binaryInput.focus()
 })
-
