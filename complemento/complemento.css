@@ -179,3 +179,55 @@ h1 {
   margin-top: 20px;
   font-size: 0.9em;
 }
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 15px; /* Espaço entre os elementos */
+}
+
+.sign-options {
+  display: none; /* Inicialmente oculto */
+  align-items: center;
+  gap: 5px;
+  margin-left: 0; /* Removemos a margem esquerda */
+}
+
+.sign-options .checkbox-label {
+  margin-right: 5px;
+  white-space: nowrap; /* Impede quebra de linha */
+}
+
+/* Estilo específico para os radio buttons */
+.custom-radio {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background-color: #000;
+  border: 2px solid #444;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  outline: none;
+  margin-right: 5px;
+}
+
+.custom-radio:checked {
+  background-color: #4CAF50;
+  border-color: #4CAF50;
+}
+
+.custom-radio:checked::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: white;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
