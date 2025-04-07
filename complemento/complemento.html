@@ -18,13 +18,22 @@
         autocomplete="off">
     </div>
 
-    <div class="input-group">
-      <div class="checkbox-container">
-        <input type="checkbox" id="padTo8Bits" class="custom-checkbox">
-        <label for="padTo8Bits" class="checkbox-label">Completar para 8 bits</label>
-      </div>
-      <input type="text" class="input-number" id="binaryInput" placeholder="Número binário" autocomplete="off">
-    </div>
+<div class="input-group">
+  <div class="checkbox-container">
+    <input type="checkbox" id="padTo8Bits" class="custom-checkbox">
+    <label for="padTo8Bits" class="checkbox-label">Completar para 8 bits</label>
+
+<div class="sign-options" id="signOptions" style="display: none;">
+  <input type="radio" id="positiveSign" name="sign" class="custom-radio">
+  <label for="positiveSign" class="checkbox-label">Positivo</label>
+
+  <input type="radio" id="negativeSign" name="sign" class="custom-radio">
+  <label for="negativeSign" class="checkbox-label">Negativo</label>
+</div>
+
+  </div>
+  <input type="text" class="input-number" id="binaryInput" placeholder="Número binário" autocomplete="off">
+</div>
 
     <div class="result-container">
       <input type="text" id="result" placeholder="Resultado" readonly>
